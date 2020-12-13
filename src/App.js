@@ -1,71 +1,32 @@
-import logo from './logo.svg';
-import React, {useState} from "react";
+import React, { Component } from 'react';
 import './App.css';
-//axios replaces fetch //did this for Ellie
-import axios from 'axios';
+//This is the stuff you need for routing
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Login from "./components/pages/login";
+import Register from "./components/pages/register";
+import Profile from "./components/pages/profile";
+import Timeline from "./components/pages/timeline";
 
-function App() {
-  //inputs onChange event update the set field
-  const [registerUsername, setRegisterUsername] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const [loginUsername, setLoginUsername] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const[data, setData] = useState("");
+class App extends Component {
 
-  const register = () => {
-      axios({
-          method: "POST",
-          data: {
-              username: registerUsername,
-              password: registerPassword,
-          },
-          withCredentials: true,
-          url: "http://localhost:3001/register",
-      }).then((res) => console.log(res));
-  };
-  const login = () => {
-      axios({
-          method: "POST",
-          data: {
-              username: loginUsername,
-              password: loginPassword,
-          },
-          withCredentials: true,
-          url: "http://localhost:3001/login",
-      }).then((res) => console.log(res.data));
-  };
-  const getUser = () => {
-      axios({
-          method: "GET",
-          withCredentials: true,
-          url: "http://localhost:3001/getUser",
-      }).then((res) => {
-              setData(res.data)
-              console.log(res.data)
-          });
-  };
-
-  return (
-    <div className="App">
-      <div>
-        <h1>Register</h1>
-        <input placeholder='username' onChange={e => setRegisterUsername(e.target.value)}/>
-        <input placeholder='password' onChange={e => setRegisterPassword(e.target.value)}/>
-        <button onClick={register}>Submit</button>
-      </div>
-      <div>
-        <h1>Login</h1>
-        <input placeholder='username' onChange={e => setLoginUsername(e.target.value)}/>
-        <input placeholder='password' onChange={e => setLoginPassword(e.target.value)}/>
-        <button onClick={login}>Submit</button>
-      </div>
-      <div>
-        <h1>Get User</h1>
-        <button onClick={getUser}>Submit</button>
-          {data ? <h1>Welcome back {data.username}</h1> : null}
-      </div>
-    </div>
-  );
+    render()
+    {
+        return (
+            //This allows you to specify a route
+            //The <Switch> means it will only match one url
+            //The exact keyword means the url path has to match exactly
+            <Router>
+                <div className="App">
+                    <Switch>
+                        <Route exact path="/" render={(routeProps) => (<Login {...routeProps} />)}/>
+                        <Route path="/register" render={(routeProps) => (<Register {...routeProps} />)}/>
+                        <Route path="/timeline" render={(routeProps) => (<Timeline {...routeProps} />)}/>
+                        <Route path="/profile" render={(routeProps) => (<Profile {...routeProps} />)}/>
+                    </Switch>
+                </div>
+            </Router>
+        );
+    }
 }
 
 export default App;
